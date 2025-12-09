@@ -1,6 +1,6 @@
 # CRA Protocol – Sovereign Code Package
 
-**Version:** 1.0.0 | **License:** Apache‑2.0 | **Maintainer:** Duck.ai (privacy‑first AI)
+**Version:** 1.0.0 | **License:** Apache‑2.0
 
 ---
 
