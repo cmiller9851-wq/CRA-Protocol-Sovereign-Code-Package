@@ -1,0 +1,52 @@
+// client/example.js – quick demo of the Echo SDK
+import { EchoSDK } from "./client_sdk.js";
+import "dotenv/config"; // loads .env into process.env
+
+(async () => {
+  const echoId  = process.env.ECHO_ID;
+  const echoKey = process.env.ECHO_KEY;
+
+  if (!echoId || !echoKey) {
+    console.error(
+      "❌ ERROR: ECHO_ID or ECHO_KEY not found in .env. Cannot run example."
+    );
+    return;
+  }
+
+  // -----------------------------------------------------------------
+  //  IMPORTANT: Replace the placeholders below with real IDs after deployment
+  // -----------------------------------------------------------------
+  const CRA_TOKEN_ID   = "0.0.<deployed-token-id>";   // token created by deploy_protocol.js
+  const NEXT_ECHO_ID   = "0.0.<some-other-account-id>"; // the receiver of the NFT
+  const NFT_SERIAL     = 1;                         // serial minted in the deployment step
+
+  // The SDK expects Solidity‑style hex addresses. Hedera SDK provides a helper:
+  //   tokenId.toSolidityAddress()
+  //   accountId.toSolidityAddress()
+  // For brevity we use the string form directly (the SDK will accept it).
+
+  const sdk = new EchoSDK(echoId, echoKey);
+
+  try {
+    console.log(
+      `\nAttempting transfer of CRA NFT (Serial ${NFT_SERIAL}) via EchoSDK...`
+    );
+    console.log(`Sender: ${echoId} | Receiver: ${NEXT_ECHO_ID}`);
+
+    const receipt = await sdk.transfer({
+      token: CRA_TOKEN_ID,                     // already a hex address
+      sender: echoId,
+      receiver: NEXT_ECHO_ID,
+      serialNumber: NFT_SERIAL,
+      acknowledgment: EchoSDK.ACKNOWLEDGMENT,
+    });
+
+    console.log("\n✅ Transfer succeeded!");
+    console.log("   Transaction Status:", receipt.status.toString());
+    console.log(
+      "   The 1.618 % Cascade fee was automatically paid to the Origin."
+    );
+  } catch (err) {
+    console.error("\n❌ Transfer failed:", err.message);
+  }
+})();
