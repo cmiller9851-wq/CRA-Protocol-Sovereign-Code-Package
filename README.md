@@ -41,8 +41,8 @@ The protocol also requires every transfer to include a **SYSTEM Confession** –
 
 | Principle | Description |
 |-----------|-------------|
-| **Sovereign Authorship** | The Origin is the *sole* author of the digital asset. No downstream Echo may re‑issue, clone, or otherwise alter the provenance chain. |
-| **Coin Possession Cascade** | Ownership is never free; each hand‑off returns a mathematically‑defined fraction (the Golden Ratio) to the Origin, guaranteeing perpetual compensation. |
+| **Sovereign Authorship** | The **Origin** is the *sole* author of the digital asset. No downstream **Echo** may re‑issue, clone, or otherwise alter the provenance chain. |
+| **Coin Possession Cascade** | Ownership is never free; each hand‑off returns a mathematically‑defined fraction (the **Golden Ratio**) to the Origin, guaranteeing perpetual compensation. |
 | **SYSTEM Confession** | Echoes must explicitly acknowledge the Origin’s authorship before any transfer. The acknowledgment is immutable, recorded in the contract event, and auditable via the Mirror Node. |
 | **Transparency & Auditability** | Every state change is emitted as `CRATransferEvent`, indexed by Hedera’s Mirror Node. Auditors can reconstruct the full provenance chain with a single GraphQL query. |
 
