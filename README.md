@@ -1,215 +1,103 @@
-# CRA Protocol – Sovereign Code Package
+# CRA Protocol – Sovereign Code Package  
 
-[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![Version](https://img.shields.io/badge/version-1.0.0-brightgreen.svg)](https://github.com/cmiller9851-wq/CRA-Protocol-Sovereign-Code-Package)
-[![Build](https://img.shields.io/badge/build-passing-success.svg)](#)
-[![Platform](https://img.shields.io/badge/platform-Hedera%20Hashgraph-purple.svg)](#)
+## What the project does  
 
-**Version:** 1.0.0 | **License:** Apache-2.0
+The **Sovereign Code Package** gives developers a ready‑to‑use toolbox for building applications that put data ownership and consent in the hands of users.  
+It bundles:
 
----
+* **Cryptographic utilities** – sign, verify, and trace every change to a piece of data.  
+* **A policy engine** – users write simple rules (read, write, share) that the engine enforces at runtime.  
+* **Reference SDKs** – a Python package (`cra-sov`) and a JavaScript/TypeScript package (`@cra/sovereign`) that expose the same API on both sides.  
+* **Sample apps** – a CLI, a tiny web front‑end, and a micro‑service that show the whole flow from policy creation to audit‑trail verification.  
 
-## Table of Contents
-1. [What is the CRA Protocol?](#what-is-the-cra-protocol)  
-2. [Philosophical Foundations](#philosophical-foundations)  
-3. [System Overview (Three-Layer Architecture)](#system-overview-three-layer-architecture)  
-4. [Repository Structure](#repository-structure)  
-5. [Quick-Start Guide (One-Command Setup)](#quick-start-guide-one-command-setup)  
-6. [Detailed Workflow](#detailed-workflow)  
-7. [Testing & Verification](#testing--verification)  
-8. [Audit & Provenance](#audit--provenance)  
-9. [Echo SDK – How Echoes Interact](#echo-sdk--how-echoes-interact)  
-10. [Internal Validations (Governance Checks)](#internal-validations-governance-checks)  
-11. [CI/CD Pipeline (GitHub Actions)](#cicd-pipeline-github-actions)  
-12. [Security & Secrets Management](#security--secrets-management)  
-13. [Extending the Protocol](#extending-the-protocol)  
-14. [Glossary](#glossary)  
-15. [References & Further Reading](#references--further-reading)  
+All code is released under the **Apache 2.0** license, so you can use it in open‑source or commercial projects without worry.
 
 ---
 
-## 1. What is the CRA Protocol?
+## Quick start  
 
-The **Coin Possession Cascade (CRA)** protocol is a sovereign-authorship token model built on **Hedera Hashgraph**.  
-It enforces two immutable rules:
-
-| Rule | Technical Realisation |
-|------|-----------------------|
-| **Sovereign Authorship** – the *Origin* (the creator) retains ultimate, verifiable control over the asset. | The token’s **treasury** and **admin/fee-schedule keys** are set to the Origin’s account. |
-| **Coin Possession Cascade** – every transfer automatically pays a **1.618 % royalty** back to the Origin. | Hedera **CustomRoyaltyFee** (fractional fee) attached to the NFT. |
-
-The protocol also requires every transfer to include a **SYSTEM Confession** – the string **“No Debt, No Breach, Only Respect.”** – which is validated both on-chain (contract) and off-chain (client SDK).
-
----
-
-## 2. Philosophical Foundations
-
-| Principle | Description |
-|-----------|-------------|
-| **Sovereign Authorship** | The **Origin** is the *sole* author of the digital asset. No downstream **Echo** may re-issue, clone, or otherwise alter the provenance chain. |
-| **Coin Possession Cascade** | Ownership is never free; each hand-off returns a mathematically-defined fraction (the **Golden Ratio**) to the Origin, guaranteeing perpetual compensation. |
-| **SYSTEM Confession** | Echoes must explicitly acknowledge the Origin’s authorship before any transfer. The acknowledgment is immutable, recorded in the contract event, and auditable via the Mirror Node. |
-| **Transparency & Auditability** | Every state change is emitted as `CRATransferEvent`, indexed by Hedera’s Mirror Node. Auditors can reconstruct the full provenance chain with a single GraphQL query. |
-
-These tenets are **hard-coded**: they cannot be disabled, overridden, or bypassed without violating the contract’s on-chain checks.
-
----
-
-## 3. System Overview (Three-Layer Architecture)
-
-1. **Token Layer** – `CRATokenFactory.sol` creates a **Non-Fungible Token** with a 1.618 % royalty fee.  
-2. **Enforcement Layer** – `CRAEnforcement.sol` wraps `transferNFT`, validates the acknowledgment string, updates an on-chain provenance mapping, and emits `CRATransferEvent`.  
-3. **Audit Layer** – `audit_provenance.js` queries the Mirror Node GraphQL API, decodes events, and produces a verifiable provenance JSON file.  
-
-The **Echo SDK** (`client_sdk.js`) is the *only* approved client-side entry point; it enforces the acknowledgment string and signs the transaction with the Echo’s private key.
-
----
-
-## 4. Repository Structure
-
-cra-protocol/
-│
-├─ contracts/
-│   ├─ IHederaTokenService.sol
-│   ├─ HederaTokenService.sol
-│   ├─ CRATokenFactory.sol
-│   ├─ CRAEnforcement.sol
-│   └─ build/                # compiled .bin & .json (generated)
-│
-├─ deploy/
-│   ├─ deploy_protocol.js
-│   └─ config.js
-│
-├─ audit/
-│   ├─ audit_provenance.js
-│   ├─ config.js
-│   ├─ abi/
-│   │    └─ CRAEnforcement.json
-│   └─ utils/
-│        ├─ graphqlClient.js
-│        └─ decodeLog.js
-│
-├─ client/
-│   ├─ client_sdk.js
-│   ├─ config.js
-│   ├─ example.js
-│   └─ utils/
-│        └─ signer.js
-│
-├─ test/
-│   └─ test_cascade.js          # end-to-end royalty verification
-│
-├─ scripts/
-│   └─ compile.js               # Solidity → bytecode/ABI
-│
-├─ .env                         # never commit – holds private keys
-├─ .gitignore
-├─ package.json
-└─ README.md
-
----
-
-## 5. Quick-Start Guide (One-Command Setup)
-
-> **Prerequisite:** Node ≥ 20, a Hedera **testnet** (or mainnet) account with enough HBAR for fees.
+### Python  
 
 ```bash
-# 1️⃣ Clone the repo
-git clone https://github.com/cmiller9851-wq/CRA-Protocol-Sovereign-Code-Package.git
-cd cra-protocol
+pip install cra-sov
+```
 
-# 2️⃣ Install dependencies
-npm ci
+```python
+from cra_sov import PolicyEngine, Crypto, UserContext
 
-# 3️⃣ Create a .env file with the four keys (Origin + Echo)
-cat > .env <<EOF
-OPERATOR_ID=0.0.<origin-account>
-OPERATOR_KEY=302e020100011...
-ECHO_ID=0.0.<echo-account>
-ECHO_KEY=302e020100011...
-EOF
+policy = PolicyEngine.load("alice_policy.json")
+request = UserContext(user_id="alice", action="read", resource="doc-42")
+signed = Crypto.sign(request, "keys/alice.pem")
 
-# 4️⃣ Compile Solidity contracts
-npm run compile
+if policy.evaluate(signed):
+    print("✅ allowed")
+else:
+    print("❌ denied")
+```
 
-# 5️⃣ Deploy token + enforcement contract (testnet by default)
-npm run deploy
+### JavaScript / TypeScript  
 
-# 6️⃣ Run the full end-to-end royalty test
-npm test
+```bash
+npm install @cra/sovereign
+```
 
-# 7️⃣ Query the audit trail (produces JSON in audit/output/)
-npm run audit
+```ts
+import { PolicyEngine, Crypto, UserContext } from "@cra/sovereign";
 
-# 8️⃣ Demo an Echo transfer via the SDK
-npm run example
+const policy = PolicyEngine.load("alice_policy.json");
+const ctx = new UserContext("alice", "read", "doc-42");
+const signed = Crypto.sign(ctx, "keys/alice_key.pem");
 
-All steps are idempotent – you can repeat them as many times as needed.
-To target mainnet, edit deploy/config.js and audit/config.js (NETWORK = “mainnet”).
+if (policy.evaluate(signed)) {
+  console.log("✅ allowed");
+} else {
+  console.log("❌ denied");
+}
+```
 
-⸻
+Both snippets do the same thing: load a user‑defined policy, sign a request, and let the engine decide whether the action is permitted.
 
-6. Detailed Workflow
+---
 
-Phase	Command	Description
-Compile	npm run compile	Compiles Solidity → bytecode/ABI
-Deploy	npm run deploy	Creates CRA NFT, deploys CRAEnforcement, links Origin
-Test	npm test	Verifies NFT ownership & 1.618 % royalty
-Audit	npm run audit	Pulls CRATransferEvent logs → provenance JSON
-SDK Demo	npm run example	Demonstrates SYSTEM Confession enforcement
+## Documentation  
 
+* **Getting started** – step‑by‑step installation and first‑run guide.  
+* **Policy language** – syntax, examples, and best practices.  
+* **API reference** – full description of the Python and JavaScript SDKs.  
+* **Architecture overview** – how the components fit together, data flow diagram, and security considerations.  
 
-⸻
+All docs live in the `docs/` folder and are published at https://cra-protocol.github.io/sovereign-code‑package (GitHub Pages).
 
-7. Testing & Verification
+---
 
-test/test_cascade.js proves the CRA Protocol’s validity:
-	•	✅ NFT ownership moves correctly
-	•	💰 Origin’s HBAR balance increases by 1.618 % royalty
+## Contributing  
 
-⸻
+We welcome improvements, bug reports, and new plugins.
 
-8. Audit & Provenance
+1. Fork the repo.  
+2. Create a branch (`git checkout -b feature/your‑idea`).  
+3. Follow the code‑style guidelines (black/ruff for Python, eslint/prettier for JavaScript).  
+4. Write tests that keep overall coverage above 80 %.  
+5. Open a pull request with a clear description of the change.
 
-audit_provenance.js queries the Hedera Mirror Node to reconstruct the full provenance chain — producing a verifiable, human-readable JSON audit file.
+See `CONTRIBUTING.md` for the full workflow.
 
-⸻
+---
 
-9. Echo SDK – How Echoes Interact
+## Roadmap (high‑level)
 
-The Echo SDK is the only approved interface.
-It enforces the SYSTEM Confession before every transfer:
+| Milestone | Target | What’s coming |
+|-----------|--------|---------------|
+| **v1.0** | Q2 2026 | Stable SDKs, full test suite, production‑grade docs |
+| **v1.1** | Q4 2026 | Decentralised policy storage (IPFS/DAG) |
+| **v2.0** | 2027 | Formal verification of the policy engine, HSM integration examples |
 
-"No Debt, No Breach, Only Respect."
+---
 
-⸻
+## License  
 
-10. Internal Validations (Governance Checks)
+The entire codebase is licensed under the **Apache License 2.0**. See `LICENSE` for the full text.  
 
-The Origin retains full control via adminKey and feeScheduleKey.
-This guarantees perpetual Sovereign Authorship and immutable system governance.
+---  
 
-⸻
-
-14. Glossary
-
-Term	Definition
-Origin	The sole creator and sovereign author of the CRA Protocol.
-Echo	Any user, dApp, or service that holds or transfers a CRA NFT.
-SYSTEM Confession	The string “No Debt, No Breach, Only Respect.” required for every transfer.
-Cascade	The automatic 1.618 % royalty payment to the Origin on every transfer.
-
-
-⸻
-
-🌐 Connect & Follow
-
-🔗 GitHub: CRA Protocol Repository￼
-🕊️ X (Twitter): @vccmac￼
-📘 Facebook: CRA Protocol Page￼
-📰 Official Blog Post: Introducing the CRA Protocol￼
-
-⸻
-
-© 2025 CRA Protocol Authors — Licensed under the Apache License, Version 2.0
-
+*Built to give users control, built for developers who need a trustworthy foundation.*
