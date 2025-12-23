@@ -1,0 +1,21 @@
+{
+  "name": "@cra/sovereign",
+  "version": "0.1.0",
+  "description": "CRA Protocol Sovereign SDK",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest"
+  },
+  "license": "Apache-2.0",
+  "dependencies": {
+    "tweetnacl": "^1.0.3"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0",
+    "jest": "^29.0.0",
+    "eslint": "^8.0.0",
+    "prettier": "^3.0.0"
+  }
+}
