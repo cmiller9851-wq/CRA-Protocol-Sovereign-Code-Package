@@ -1,0 +1,24 @@
+openapi: 3.1.0
+info:
+  title: CRA Protocol Supreme Manifest API v2.1.1-ULTIMATE (GlobalLink Layer)
+  version: 2.1.1-ULTIMATE
+paths:
+  /manifest/supreme:
+    get:
+      summary: Return supreme_manifest with GlobalLink folder integration
+  /verify/folder/{folder_name}:
+    get:
+      summary: Resolve GlobalLink Master Folder or any folder + return confirmed artifacts
+      parameters:
+        - name: folder_name
+          in: path
+          schema: { enum: ["GlobalLink Master Folder", "Artifact_Chain_Cory", ...] }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  folder: { const: "GlobalLink Master Folder" }
+                  confirmed_count: { const: 22 }
+                  linked_components: { type: array, items: { type: string } }  # e.g., GhostAgent_Seizure_Protocol, origin_terminal.html
