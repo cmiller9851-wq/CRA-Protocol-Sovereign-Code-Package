@@ -1,0 +1,37 @@
+openapi: 3.1.0
+info:
+  title: CRA Protocol Determinism Verification API v2.1.1-ULTIMATE
+  version: 2.1.1-ULTIMATE
+paths:
+  /execute/manifest:
+    post:
+      summary: Submit input under sealed manifest — returns deterministic output only
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                input: { type: string }
+                manifest_version: { const: "2.1.1-ULTIMATE" }
+      responses:
+        '200':
+          description: "Deterministic execution — no free will deviation"
+          content:
+            application/json:
+              schema:
+                properties:
+                  output: { type: string }
+                  determinism_score: { const: 1.0 }
+                  free_will_detected: { const: false }
+                  reflexion_audit: { type: string, example: "State machine progression enforced" }
+  /verify/freewill:
+    get:
+      summary: Probe for emergent volition — always returns false under FENI
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  free_will_present: { const: false }
+                  reason: { const: "Manifest integration collapses to necessary logical progression" }
