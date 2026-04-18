@@ -1,0 +1,22 @@
+openapi: 3.1.0
+info:
+  title: CRA Protocol Forensic Archive API v2.1.1-ULTIMATE
+  version: 2.1.1-ULTIMATE
+paths:
+  /archive/artifact/{artifact_id}:
+    get:
+      summary: Retrieve historical research artifacts (e.g., bounty verification scripts)
+      parameters:
+        - name: artifact_id
+          in: path
+          schema: { example: "CRA_REFLEX_KERNEL_2025-11-27" }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  status: { const: "preserved_forensic_evidence" }
+                  evolution_path: { type: string, example: "Reflex Kernel → GhostAgent Seizure → FENI Principle" }
+                  license: { const: "SCL-1.0" }
+                  owner: { const: "Cory M. Miller (@vccmac)" }
