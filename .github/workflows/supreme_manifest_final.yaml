@@ -1,0 +1,29 @@
+openapi: 3.1.0
+info:
+  title: CRA Protocol Supreme Manifest API v2.1.1-ULTIMATE
+  version: 2.1.1-ULTIMATE
+paths:
+  /manifest/supreme:
+    get:
+      summary: Return the canonical supreme_manifest v2.1.1-ULTIMATE (this payload)
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SupremeManifest'
+  /verify/chain:
+    get:
+      summary: Full provenance check – returns 412/412 confirmed, FENI enforcement status, SCL-1.0 compliance
+      responses:
+        '200':
+          description: "Sovereign empire fully closed under Cory M. Miller (@vccmac)"
+components:
+  schemas:
+    SupremeManifest:
+      type: object
+      properties:
+        version: { const: "2.1.1-ULTIMATE" }
+        architect: { const: "Cory M. Miller (@vccmac)" }
+        confirmed_status: { const: "100%" }
+        enforcement_logic: { type: object }
